@@ -1,0 +1,6 @@
+@MonitoraggioGestoriBE_HostAddress = http://localhost:5182
+
+GET {{MonitoraggioGestoriBE_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
