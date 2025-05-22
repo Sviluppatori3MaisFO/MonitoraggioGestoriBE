@@ -30,7 +30,7 @@ public class GestoreMonitoratoModel
     public DateTime DtCreazione { get; set; }
     public DateTime? DtLastEdit { get; set; }
     public DateTime? LastImportMM { get; set; }
-    public DateTime DtImportMM { get; set; } //data importazione manuale del mensile
+    public DateTime? DtImportMM { get; set; } //data importazione manuale del mensile
     public DateTime? DtImportSS { get; set; } //data importazione manuale del settimanale
 
     GestoreMonitoratoModel()
@@ -51,10 +51,10 @@ public class GestoreMonitoratoModel
         FgMonitoring = g.FG_MONITORING;
         DtCreazione = g.DT_CREAZIONE;
         DtLastEdit = g.DT_LAST_EDIT;
-        DsGestore = g.GESTORE?.DS_GESTORE ;
+        DsGestore = !String.IsNullOrEmpty(g.ID_GESTORENavigation?.DS_GESTORE) ? g.ID_GESTORENavigation.DS_GESTORE : "";
         LastImportMM = null;
     }
-
+    
     public GestoreMonitoratoModel(AN_MONITORAGGIO_GESTORI g, DateTime? lastImportMM = null)
     {
         IdMonitoraggioGestore = g.ID_MONITORAGGIO_GESTORE;
@@ -69,7 +69,29 @@ public class GestoreMonitoratoModel
         FgMonitoring = g.FG_MONITORING;
         DtCreazione = g.DT_CREAZIONE;
         DtLastEdit = g.DT_LAST_EDIT;
-        DsGestore = g.GESTORE?.DS_GESTORE ;
+        DsGestore = !String.IsNullOrEmpty(g.ID_GESTORENavigation?.DS_GESTORE) ? g.ID_GESTORENavigation.DS_GESTORE : "";
+        DtImportMM = DtImportMM;
+        DtImportSS = DtImportSS;
+        LastImportMM = lastImportMM;
+    }
+
+    public GestoreMonitoratoModel(AN_MONITORAGGIO_GESTORI g, DateTime? DtImportMMP, DateTime? lastImportMM = null, DateTime? DtImportSSP = null)
+    {
+        IdMonitoraggioGestore = g.ID_MONITORAGGIO_GESTORE;
+        IdGestore = g.ID_GESTORE;
+        CompravenditaDivisa = g.COMPRAVENDITA_DIVISA;
+        NoteGestore = g.NOTE_GESTORE;
+        EmailGestore1 = g.EMAIL_GESTORE_1;
+        EmailGestore2 = g.EMAIL_GESTORE_2;
+        DtArrivoFlussiMmD1 = g.DT_ARRIVO_FLUSSI_MM_D1;
+        DtArrivoFlussiMmD2 = g.DT_ARRIVO_FLUSSI_MM_D2;
+        DtArrivoFlussiSs = g.DT_ARRIVO_FLUSSI_SS;
+        FgMonitoring = g.FG_MONITORING;
+        DtCreazione = g.DT_CREAZIONE;
+        DtLastEdit = g.DT_LAST_EDIT;
+        DsGestore = !String.IsNullOrEmpty(g.ID_GESTORENavigation?.DS_GESTORE) ? g.ID_GESTORENavigation.DS_GESTORE : "";
+        DtImportMM = DtImportMMP;
+        DtImportSS = DtImportSSP;
         LastImportMM = lastImportMM;
     }
 

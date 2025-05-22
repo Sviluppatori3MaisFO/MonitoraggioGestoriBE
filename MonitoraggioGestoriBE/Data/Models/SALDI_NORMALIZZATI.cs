@@ -135,5 +135,5 @@ public partial class SALDI_NORMALIZZATI
 
     [ForeignKey("ID_GESTORE")]
     [InverseProperty("SALDI_NORMALIZZATIs")]
-    public virtual AN_GESTORI GESTORE { get; set; } = null!;
+    public virtual AN_GESTORI ID_GESTORENavigation { get; set; } = null!;
 }

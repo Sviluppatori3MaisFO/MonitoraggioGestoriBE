@@ -22,6 +22,8 @@ public partial class FlussiFinContext : DbContext
 
     public virtual DbSet<IMPORTAZIONE_GESTORI> IMPORTAZIONE_GESTORIs { get; set; }
 
+    public virtual DbSet<MOVIMENTI_NORMALIZZATI> MOVIMENTI_NORMALIZZATIs { get; set; }
+
     public virtual DbSet<SALDI_NORMALIZZATI> SALDI_NORMALIZZATIs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -65,7 +67,7 @@ public partial class FlussiFinContext : DbContext
                 .HasComment("Flag di monitoraggio 1 monitoriamo ancora 2 no (eliminazione logica)");
             entity.Property(e => e.NOTE_GESTORE).HasComment("Note del gestore espresse in HTML");
 
-            entity.HasOne(d => d.GESTORE).WithMany(p => p.AN_MONITORAGGIO_GESTORIs)
+            entity.HasOne(d => d.ID_GESTORENavigation).WithMany(p => p.AN_MONITORAGGIO_GESTORIs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("GESTORE");
         });
@@ -82,6 +84,19 @@ public partial class FlussiFinContext : DbContext
                 .HasConstraintName("MONITORAGGIO_GESTORE");
         });
 
+        modelBuilder.Entity<MOVIMENTI_NORMALIZZATI>(entity =>
+        {
+            entity.HasKey(e => e.ID_MOV_NORMALIZZATO).HasName("PK_MOVIMENTI_NORM");
+
+            entity.ToTable("MOVIMENTI_NORMALIZZATI", tb => tb.HasComment("Tutti i movimenti importati nel sistema e normalizzati secondo il formato standard"));
+
+            entity.Property(e => e.ID_MOV_NORMALIZZATO).HasComment("ID PROGRESSIVO DEL MOVIMENTO IN FORMA NORMALIZZATA");
+            
+            entity.HasOne(d => d.ID_GESTORENavigation).WithMany(p => p.MOVIMENTI_NORMALIZZATIs)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MOV_GESTORE");
+        });
+
         modelBuilder.Entity<SALDI_NORMALIZZATI>(entity =>
         {
             entity.Property(e => e.ID_IMPORTAZIONE).HasComment("progressivo che raggruppa l'importazione di un gruppo di saldi");
@@ -89,7 +104,7 @@ public partial class FlussiFinContext : DbContext
             entity.Property(e => e.STATO).HasComment("'NE'=normalizzato errore, 'N'=normalizzato, 'IE'=importazione errore 'IV'=importazione valido, 'I'=importato");
             entity.Property(e => e.TIPOLOGIA_SALDO).HasComment("'TIT' = saldo titolo , 'CC' = saldo conto corrente");
 
-            entity.HasOne(d => d.GESTORE).WithMany(p => p.SALDI_NORMALIZZATIs)
+            entity.HasOne(d => d.ID_GESTORENavigation).WithMany(p => p.SALDI_NORMALIZZATIs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_GESTORE_SALDI_NORM");
         });

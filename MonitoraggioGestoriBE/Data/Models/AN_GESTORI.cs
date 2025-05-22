@@ -49,9 +49,12 @@ public partial class AN_GESTORI
     [Unicode(false)]
     public string DS_GESTORE_REPORT { get; set; } = null!;
 
-    [InverseProperty("GESTORE")]
+    [InverseProperty("ID_GESTORENavigation")]
     public virtual ICollection<AN_MONITORAGGIO_GESTORI> AN_MONITORAGGIO_GESTORIs { get; set; } = new List<AN_MONITORAGGIO_GESTORI>();
 
-    [InverseProperty("GESTORE")]
+    [InverseProperty("ID_GESTORENavigation")]
+    public virtual ICollection<MOVIMENTI_NORMALIZZATI> MOVIMENTI_NORMALIZZATIs { get; set; } = new List<MOVIMENTI_NORMALIZZATI>();
+
+    [InverseProperty("ID_GESTORENavigation")]
     public virtual ICollection<SALDI_NORMALIZZATI> SALDI_NORMALIZZATIs { get; set; } = new List<SALDI_NORMALIZZATI>();
 }
