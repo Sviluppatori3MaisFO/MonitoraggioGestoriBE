@@ -1,0 +1,58 @@
+using MonitoraggioGestoriBE.Data.Models;
+
+namespace MonitoraggioGestoriBE.Models;
+
+public class GestoreModel
+{
+    public decimal IdGestore { get; set; }
+    public string DsGestore { get; set; }
+    public string DtRiferimentoQuadratura { get; set; }
+    public int? UtenteCreazione { get; set; }
+    public DateTime? DtCreazione { get; set; }
+    public int? UtenteModifica { get; set; }
+    public DateTime? DtModifica { get; set; }
+    public string DsGestoreReport { get; set; }
+}
+
+public class GestoreMonitoratoModel
+{
+    public decimal IdMonitoraggioGestore { get; set; }
+    public decimal IdGestore { get; set; }
+    public string DsGestore { get; set; }
+    public decimal CompravenditaDivisa { get; set; }
+    public string? NoteGestore { get; set; }
+    public string EmailGestore1 { get; set; }
+    public string? EmailGestore2 { get; set; }
+    public decimal DtArrivoFlussiMmD1 { get; set; }
+    public decimal DtArrivoFlussiMmD2 { get; set; }
+    public decimal? DtArrivoFlussiSs { get; set; }
+    public decimal FgMonitoring { get; set; }
+    public DateTime DtCreazione { get; set; }
+    public DateTime? DtLastEdit { get; set; }
+    public DateTime? LastImportMM { get; set; }
+
+    GestoreMonitoratoModel()
+    {
+    }
+
+    public GestoreMonitoratoModel(AN_MONITORAGGIO_GESTORI g)
+    {
+        IdMonitoraggioGestore = g.ID_MONITORAGGIO_GESTORE;
+        IdGestore = g.ID_GESTORE;
+        CompravenditaDivisa = g.COMPRAVENDITA_DIVISA;
+        NoteGestore = g.NOTE_GESTORE;
+        EmailGestore1 = g.EMAIL_GESTORE_1;
+        EmailGestore2 = g.EMAIL_GESTORE_2;
+        DtArrivoFlussiMmD1 = g.DT_ARRIVO_FLUSSI_MM_D1;
+        DtArrivoFlussiMmD2 = g.DT_ARRIVO_FLUSSI_MM_D2;
+        DtArrivoFlussiSs = g.DT_ARRIVO_FLUSSI_SS;
+        FgMonitoring = g.FG_MONITORING;
+        DtCreazione = g.DT_CREAZIONE;
+        DtLastEdit = g.DT_LAST_EDIT;
+        DsGestore = g.GESTORE?.DS_GESTORE ;
+        LastImportMM = g.GESTORE.SALDI_NORMALIZZATIs
+            .Select(s => s.DATA_SALDO)
+            .Max();
+    }
+
+}
