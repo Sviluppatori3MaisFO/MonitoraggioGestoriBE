@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "dgUxRo0dPgw=",
+  "dgSpecHash": "jZBJBqoSiMg=",
   "success": true,
   "projectFilePath": "/Users/michaelcoltra/Work/Mais/Projects/MonitoraggioGestori/MonitoraggioGestoriBE/MonitoraggioGestoriBE/MonitoraggioGestoriBE.csproj",
   "expectedPackageFiles": [
     "/Users/michaelcoltra/.nuget/packages/azure.core/1.38.0/azure.core.1.38.0.nupkg.sha512",
     "/Users/michaelcoltra/.nuget/packages/azure.identity/1.11.4/azure.identity.1.11.4.nupkg.sha512",
+    "/Users/michaelcoltra/.nuget/packages/castle.core/5.1.1/castle.core.5.1.1.nupkg.sha512",
     "/Users/michaelcoltra/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/Users/michaelcoltra/.nuget/packages/microsoft.aspnetcore.openapi/8.0.13/microsoft.aspnetcore.openapi.8.0.13.nupkg.sha512",
     "/Users/michaelcoltra/.nuget/packages/microsoft.bcl.asyncinterfaces/7.0.0/microsoft.bcl.asyncinterfaces.7.0.0.nupkg.sha512",
@@ -24,6 +25,7 @@
     "/Users/michaelcoltra/.nuget/packages/microsoft.entityframeworkcore.abstractions/9.0.5/microsoft.entityframeworkcore.abstractions.9.0.5.nupkg.sha512",
     "/Users/michaelcoltra/.nuget/packages/microsoft.entityframeworkcore.analyzers/9.0.5/microsoft.entityframeworkcore.analyzers.9.0.5.nupkg.sha512",
     "/Users/michaelcoltra/.nuget/packages/microsoft.entityframeworkcore.design/9.0.5/microsoft.entityframeworkcore.design.9.0.5.nupkg.sha512",
+    "/Users/michaelcoltra/.nuget/packages/microsoft.entityframeworkcore.proxies/9.0.5/microsoft.entityframeworkcore.proxies.9.0.5.nupkg.sha512",
     "/Users/michaelcoltra/.nuget/packages/microsoft.entityframeworkcore.relational/9.0.5/microsoft.entityframeworkcore.relational.9.0.5.nupkg.sha512",
     "/Users/michaelcoltra/.nuget/packages/microsoft.entityframeworkcore.sqlserver/9.0.5/microsoft.entityframeworkcore.sqlserver.9.0.5.nupkg.sha512",
     "/Users/michaelcoltra/.nuget/packages/microsoft.entityframeworkcore.tools/9.0.5/microsoft.entityframeworkcore.tools.9.0.5.nupkg.sha512",
