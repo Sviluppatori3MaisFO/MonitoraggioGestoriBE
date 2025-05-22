@@ -7,11 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<UtilsService>();
+
 
 // ✅ Configura il DbContext Oracle
 var connectionString = builder.Configuration.GetConnectionString("FlussiFinDB");
 builder.Services.AddDbContext<FlussiFinContext>(options =>
-    options.UseOracle(connectionString));
+    options.UseLazyLoadingProxies()
+        .UseOracle(connectionString));
 
 // ✅ CONFIGURA CORS
 builder.Services.AddCors(options =>

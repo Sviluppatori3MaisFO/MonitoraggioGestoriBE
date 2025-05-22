@@ -20,6 +20,8 @@ public partial class FlussiFinContext : DbContext
 
     public virtual DbSet<AN_MONITORAGGIO_GESTORI> AN_MONITORAGGIO_GESTORIs { get; set; }
 
+    public virtual DbSet<IMPORTAZIONE_GESTORI> IMPORTAZIONE_GESTORIs { get; set; }
+
     public virtual DbSet<SALDI_NORMALIZZATI> SALDI_NORMALIZZATIs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -66,6 +68,18 @@ public partial class FlussiFinContext : DbContext
             entity.HasOne(d => d.GESTORE).WithMany(p => p.AN_MONITORAGGIO_GESTORIs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("GESTORE");
+        });
+
+        modelBuilder.Entity<IMPORTAZIONE_GESTORI>(entity =>
+        {
+            entity.HasKey(e => e.ID_IMPORTAZIONE_GESTORE).HasName("PK_ID_IMPORTAZIONE_GESTORE");
+
+            entity.Property(e => e.FG_IMPORT_MM).HasDefaultValueSql("0 ");
+            entity.Property(e => e.FG_IMPORT_SS).HasDefaultValueSql("0 ");
+
+            entity.HasOne(d => d.ID_MONITORAGGIO_GESTORENavigation).WithMany(p => p.IMPORTAZIONE_GESTORIs)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("MONITORAGGIO_GESTORE");
         });
 
         modelBuilder.Entity<SALDI_NORMALIZZATI>(entity =>

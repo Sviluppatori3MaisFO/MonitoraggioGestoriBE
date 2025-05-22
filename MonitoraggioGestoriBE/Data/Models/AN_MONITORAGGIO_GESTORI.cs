@@ -81,4 +81,7 @@ public partial class AN_MONITORAGGIO_GESTORI
     [ForeignKey("ID_GESTORE")]
     [InverseProperty("AN_MONITORAGGIO_GESTORIs")]
     public virtual AN_GESTORI GESTORE { get; set; } = null!;
+
+    [InverseProperty("ID_MONITORAGGIO_GESTORENavigation")]
+    public virtual ICollection<IMPORTAZIONE_GESTORI> IMPORTAZIONE_GESTORIs { get; set; } = new List<IMPORTAZIONE_GESTORI>();
 }
