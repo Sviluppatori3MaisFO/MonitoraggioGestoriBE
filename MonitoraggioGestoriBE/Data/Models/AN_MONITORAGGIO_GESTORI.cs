@@ -16,6 +16,9 @@ public partial class AN_MONITORAGGIO_GESTORI
     [Column(TypeName = "NUMBER")]
     public decimal ID_MONITORAGGIO_GESTORE { get; set; }
 
+    /// <summary>
+    /// Corrispondenza con AN_GESTORI
+    /// </summary>
     [Column(TypeName = "NUMBER")]
     public decimal ID_GESTORE { get; set; }
 
@@ -32,12 +35,15 @@ public partial class AN_MONITORAGGIO_GESTORI
     public string? NOTE_GESTORE { get; set; }
 
     /// <summary>
-    /// Email da chi arrivano i movimenti del gestore
+    /// Email referente gestore
     /// </summary>
     [StringLength(500)]
     [Unicode(false)]
     public string EMAIL_GESTORE_1 { get; set; } = null!;
 
+    /// <summary>
+    /// Email referente gestore
+    /// </summary>
     [StringLength(500)]
     [Unicode(false)]
     public string? EMAIL_GESTORE_2 { get; set; }
@@ -81,7 +87,4 @@ public partial class AN_MONITORAGGIO_GESTORI
     [ForeignKey("ID_GESTORE")]
     [InverseProperty("AN_MONITORAGGIO_GESTORIs")]
     public virtual AN_GESTORI ID_GESTORENavigation { get; set; } = null!;
-
-    [InverseProperty("ID_MONITORAGGIO_GESTORENavigation")]
-    public virtual ICollection<IMPORTAZIONE_GESTORI> IMPORTAZIONE_GESTORIs { get; set; } = new List<IMPORTAZIONE_GESTORI>();
 }

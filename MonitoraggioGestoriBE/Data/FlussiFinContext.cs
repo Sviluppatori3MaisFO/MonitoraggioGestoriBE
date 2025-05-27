@@ -20,7 +20,7 @@ public partial class FlussiFinContext : DbContext
 
     public virtual DbSet<AN_MONITORAGGIO_GESTORI> AN_MONITORAGGIO_GESTORIs { get; set; }
 
-    public virtual DbSet<IMPORTAZIONE_GESTORI> IMPORTAZIONE_GESTORIs { get; set; }
+    public virtual DbSet<MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSI> MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSIs { get; set; }
 
     public virtual DbSet<MOVIMENTI_NORMALIZZATI> MOVIMENTI_NORMALIZZATIs { get; set; }
 
@@ -61,10 +61,12 @@ public partial class FlussiFinContext : DbContext
             entity.Property(e => e.DT_ARRIVO_FLUSSI_SS).HasComment("GG della settimana in cui arrivano i flussi in numero del gg es. Lunedi=1 Martedi=2");
             entity.Property(e => e.DT_CREAZIONE).HasComment("DT di inizio monitoraggio ");
             entity.Property(e => e.DT_LAST_EDIT).HasComment("DT ultima modifica an");
-            entity.Property(e => e.EMAIL_GESTORE_1).HasComment("Email da chi arrivano i movimenti del gestore");
+            entity.Property(e => e.EMAIL_GESTORE_1).HasComment("Email referente gestore");
+            entity.Property(e => e.EMAIL_GESTORE_2).HasComment("Email referente gestore");
             entity.Property(e => e.FG_MONITORING)
                 .HasDefaultValueSql("1")
                 .HasComment("Flag di monitoraggio 1 monitoriamo ancora 2 no (eliminazione logica)");
+            entity.Property(e => e.ID_GESTORE).HasComment("Corrispondenza con AN_GESTORI");
             entity.Property(e => e.NOTE_GESTORE).HasComment("Note del gestore espresse in HTML");
 
             entity.HasOne(d => d.ID_GESTORENavigation).WithMany(p => p.AN_MONITORAGGIO_GESTORIs)
@@ -72,16 +74,26 @@ public partial class FlussiFinContext : DbContext
                 .HasConstraintName("GESTORE");
         });
 
-        modelBuilder.Entity<IMPORTAZIONE_GESTORI>(entity =>
+        modelBuilder.Entity<MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSI>(entity =>
         {
-            entity.HasKey(e => e.ID_IMPORTAZIONE_GESTORE).HasName("PK_ID_IMPORTAZIONE_GESTORE");
+            entity.Property(e => e.DT_IMPORT_MM).HasComment("DATA_IMPORTAZIONE MENSILE");
+            entity.Property(e => e.DT_IMPORT_SS).HasComment("DATA_IMPORTAZIONE SETTIMANALE");
+            entity.Property(e => e.FG_IMPORTAZIONE_MM).HasComment("FG IMPORTAZIONE MENSILE se limportazione e' effettuata");
+            entity.Property(e => e.FG_IMPORTAZIONE_SS).HasComment("FG IMPORTAZIONE SETTIMANALE se limportazione e' effettuata");
+            entity.Property(e => e.ID_GESTORE).HasComment("ID GESTORE COLLEGATO AD AN_GESTORI");
+            entity.Property(e => e.ID_IMPORTAZIONE_FLUSSO)
+                .ValueGeneratedOnAdd()
+                .HasComment("Index");
+            entity.Property(e => e.ID_MONITORAGGIO_GESTORE).HasComment("ID MONITORAGGIO COLLEGATO AD AN MONITORAGGIO GESTORI");
+            entity.Property(e => e.NOTE_HTML).HasComment("NOTE Sull importazione");
 
-            entity.Property(e => e.FG_IMPORT_MM).HasDefaultValueSql("0 ");
-            entity.Property(e => e.FG_IMPORT_SS).HasDefaultValueSql("0 ");
-
-            entity.HasOne(d => d.ID_MONITORAGGIO_GESTORENavigation).WithMany(p => p.IMPORTAZIONE_GESTORIs)
+            entity.HasOne(d => d.ID_GESTORENavigation).WithMany()
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("MONITORAGGIO_GESTORE");
+                .HasConstraintName("AN_GESTORI");
+
+            entity.HasOne(d => d.ID_MONITORAGGIO_GESTORENavigation).WithMany()
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("MONITORAGGIO_GESTORI");
         });
 
         modelBuilder.Entity<MOVIMENTI_NORMALIZZATI>(entity =>
@@ -90,7 +102,6 @@ public partial class FlussiFinContext : DbContext
 
             entity.ToTable("MOVIMENTI_NORMALIZZATI", tb => tb.HasComment("Tutti i movimenti importati nel sistema e normalizzati secondo il formato standard"));
 
-            entity.Property(e => e.ID_MOV_NORMALIZZATO).HasComment("ID PROGRESSIVO DEL MOVIMENTO IN FORMA NORMALIZZATA");
             
             entity.HasOne(d => d.ID_GESTORENavigation).WithMany(p => p.MOVIMENTI_NORMALIZZATIs)
                 .OnDelete(DeleteBehavior.ClientSetNull)

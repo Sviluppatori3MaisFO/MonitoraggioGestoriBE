@@ -17,15 +17,12 @@ builder.Services.AddDbContext<FlussiFinContext>(options =>
         .UseOracle(connectionString));
 
 // ✅ CONFIGURA CORS
-builder.Services.AddCors(options =>
+builder.Services.AddCors(o => o.AddPolicy("AllowFrontend", builderCors =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.WithOrigins("http://localhost:4200") // Sostituisci con l'URL corretto
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
-});
+    builderCors.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+}));
 
 var app = builder.Build();
 

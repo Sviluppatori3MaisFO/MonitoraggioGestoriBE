@@ -16,7 +16,6 @@ public partial class MOVIMENTI_NORMALIZZATI
     /// ID PROGRESSIVO DEL MOVIMENTO IN FORMA NORMALIZZATA
     /// </summary>
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Precision(10)]
     public int ID_MOV_NORMALIZZATO { get; set; }
 

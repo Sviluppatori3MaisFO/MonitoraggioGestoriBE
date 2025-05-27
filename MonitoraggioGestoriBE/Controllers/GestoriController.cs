@@ -46,7 +46,7 @@ public class GestoriController : ControllerBase
             .ToDictionaryAsync(x => x.IdGestore, x => x.MaxDate);
         
         // recuper gli import manuali
-        var importgestori = await _context.IMPORTAZIONE_GESTORIs
+        var importgestori = await _context.MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSIs
             .Where(w => gestoriMonitoratiIds.Contains(w.ID_MONITORAGGIO_GESTORE))
             .Select(s => new
             {
@@ -100,20 +100,123 @@ public class GestoriController : ControllerBase
             .MaxAsync(s => (DateTime?)s.DATA_SALDO);
 
         // 3. Recupera i dati di importazione (da IMPORTAZIONE_GESTORI)
-        var import = await _context.IMPORTAZIONE_GESTORIs
+        var import = await _context.MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSIs
             .Where(i => i.ID_MONITORAGGIO_GESTORE == monitoraggio.ID_MONITORAGGIO_GESTORE)
             .OrderByDescending(i => i.DT_IMPORT_MM)
             .FirstOrDefaultAsync();
+
+        var movimentiBloccati = await GetMovimentiInImportErrore(id);
 
         // 4. Costruisci e restituisci il modello
         return new GestoreMonitoratoModel(
             monitoraggio,
             import?.DT_IMPORT_MM,
             lastImportMM,
-            import?.DT_IMPORT_SS
+            import?.DT_IMPORT_SS,
+            movimentiBloccati
         );
     }
     
 
+    // - =================================================================================================================================================
+    
+    // GET: /getGestoreMonitoratoByIdGestore
+    [HttpGet("getQuantitaGestoriChart/{idGestore}")]
+    public async Task<List<GestoreImportazioneMovimentiChart>> GetQuantitaGestoriChart (decimal idGestore)
+    {
+        
+        var seiMesiFa = DateTime.Today.AddMonths(-6);
+
+        var movimenti = await _context.MOVIMENTI_NORMALIZZATIs
+            .Where(w => w.ID_GESTORE == idGestore && w.DATA_IMPORTAZIONE >= seiMesiFa)
+            .GroupBy(g => new { g.ID_GESTORE, g.DATA_IMPORTAZIONE })
+            .Select(s => new GestoreImportazioneMovimentiChart()
+            {
+                IdGestore = s.Key.ID_GESTORE,
+                DtImportazione = s.Key.DATA_IMPORTAZIONE,
+
+                // Conta definitivi: quelli con CODICE_OPERAZIONE che inizia per "D_"
+                ValueDefinitivi = s.Count(x => x.CODICE_OPERAZIONE.StartsWith("D_")),
+
+                // Conta settimanali: tutti gli altri
+                ValueSettimanali = s.Count(x => !x.CODICE_OPERAZIONE.StartsWith("D_"))
+            })
+            .ToListAsync();
+
+
+
+        return movimenti;
+    }
+    
+    
+    // - =================================================================================================================================================
+    
+    [HttpGet("getMovimentiInImportErrore")]
+    public async Task <List<MovimentiNormalizzatiModel>> GetMovimentiInImportErrore(decimal idGestore)
+    {
+        var res = await _context.MOVIMENTI_NORMALIZZATIs
+            .Where(w => w.ID_GESTORE == idGestore && w.STATO != "N" && w.STATO != "I" && w.STATO != "M")
+            .Select(s => new MovimentiNormalizzatiModel()
+            {
+                IdMovimentoNormalizzato = s.ID_MOV_NORMALIZZATO,
+                Stato = String.IsNullOrEmpty(s.STATO) ? "" : s.STATO
+            } )
+            
+            .ToListAsync();
+
+        return res;
+    }
+    
+    // - =================================================================================================================================================
+    
+    [HttpGet("getUltimaImportazione")]
+    public async Task <GestoreUltimoImportazione> GetUltimaImportazione(decimal idGestore)
+    {
+        var res = await _context.MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSIs
+            .Where(w => w.ID_MONITORAGGIO_GESTORENavigation.ID_GESTORE == idGestore)
+            .Select(s => new GestoreUltimoImportazione()
+            {
+                IdImportazioneGestore = s.ID_IMPORTAZIONE_FLUSSO,
+                DsGestore = s.ID_GESTORENavigation.DS_GESTORE,
+                FgImportMM = s.FG_IMPORTAZIONE_MM,
+                FgImportSS = s.FG_IMPORTAZIONE_SS != null ?s.FG_IMPORTAZIONE_SS.Value:0,
+                Note = s.NOTE_HTML,
+                DtImportMM = s.DT_IMPORT_MM
+            }).FirstOrDefaultAsync();
+
+        return res;
+    }
+    
+    // - =================================================================================================================================================
+    
+    // POST: /editMonitoraggioGestore
+    [HttpPost("editGestoreMonitorato")]
+    public async Task<bool> EditGestoreMonitorato(GestoreMonitoratoModel? model = null)
+    {
+        if(model == null) return false;
+        
+        var oldModel = await _context.AN_MONITORAGGIO_GESTORIs
+            .FirstOrDefaultAsync(w => w.ID_GESTORE == model.IdGestore);
+        if (oldModel == null)
+            model = new GestoreMonitoratoModel();
+        
+        oldModel.COMPRAVENDITA_DIVISA = model.CompravenditaDivisa;
+        oldModel.NOTE_GESTORE = model.NoteGestore;
+        oldModel.EMAIL_GESTORE_1 = model.EmailGestore1.Trim();
+        oldModel.EMAIL_GESTORE_2 = !String.IsNullOrEmpty(model.EmailGestore2) ?model.EmailGestore2.Trim() : null;
+        oldModel.DT_ARRIVO_FLUSSI_MM_D1 = model.DtArrivoFlussiMmD1;
+        oldModel.DT_ARRIVO_FLUSSI_MM_D2 = model.DtArrivoFlussiMmD2;
+        oldModel.DT_ARRIVO_FLUSSI_SS = model.DtArrivoFlussiSs;
+
+        await _context.SaveChangesAsync();
+        
+        return true;
+    }
+
     #endregion    
 }
+
+
+
+
+

@@ -17,6 +17,7 @@ dotnet ef dbcontext scaffold "User Id=flussi_fin;Password=nextam;Data Source=192
   --table SALDI_NORMALIZZATI \
   --table IMPORTAZIONE_GESTORI \
   --table MOVIMENTI_NORMALIZZATI \
+  --table MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSI \
   --data-annotations \
   --force
 ```

@@ -32,8 +32,10 @@ public class GestoreMonitoratoModel
     public DateTime? LastImportMM { get; set; }
     public DateTime? DtImportMM { get; set; } //data importazione manuale del mensile
     public DateTime? DtImportSS { get; set; } //data importazione manuale del settimanale
+    
+    public List<MovimentiNormalizzatiModel> MovimentiBloccati { get; set; }
 
-    GestoreMonitoratoModel()
+    public GestoreMonitoratoModel()
     {
     }
     
@@ -75,7 +77,7 @@ public class GestoreMonitoratoModel
         LastImportMM = lastImportMM;
     }
 
-    public GestoreMonitoratoModel(AN_MONITORAGGIO_GESTORI g, DateTime? DtImportMMP, DateTime? lastImportMM = null, DateTime? DtImportSSP = null)
+    public GestoreMonitoratoModel(AN_MONITORAGGIO_GESTORI g, DateTime? DtImportMMP, DateTime? lastImportMM = null, DateTime? DtImportSSP = null, List<MovimentiNormalizzatiModel> MovimentiBloccati = null)
     {
         IdMonitoraggioGestore = g.ID_MONITORAGGIO_GESTORE;
         IdGestore = g.ID_GESTORE;
@@ -93,6 +95,27 @@ public class GestoreMonitoratoModel
         DtImportMM = DtImportMMP;
         DtImportSS = DtImportSSP;
         LastImportMM = lastImportMM;
+        this.MovimentiBloccati = MovimentiBloccati;
     }
 
+}
+
+
+
+public class GestoreImportazioneMovimentiChart
+{
+    public decimal IdGestore { get; set; }
+    public DateTime DtImportazione { get; set; }
+    public decimal ValueDefinitivi { get; set; }
+    public decimal ValueSettimanali { get; set; }
+}
+
+public class GestoreUltimoImportazione
+{
+    public decimal IdImportazioneGestore { get; set; }
+    public string DsGestore { get; set; }
+    public decimal FgImportSS { get; set; }
+    public decimal FgImportMM { get; set; }
+    public string Note { get; set; }
+    public DateTime DtImportMM { get; set; }    
 }
