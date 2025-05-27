@@ -76,6 +76,8 @@ public partial class FlussiFinContext : DbContext
 
         modelBuilder.Entity<MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSI>(entity =>
         {
+            entity.HasKey(e => e.ID_IMPORTAZIONE_FLUSSO).HasName("PK_ID_IMPORTAZIONE_FLUSSO");
+
             entity.Property(e => e.DT_IMPORT_MM).HasComment("DATA_IMPORTAZIONE MENSILE");
             entity.Property(e => e.DT_IMPORT_SS).HasComment("DATA_IMPORTAZIONE SETTIMANALE");
             entity.Property(e => e.FG_IMPORTAZIONE_MM).HasComment("FG IMPORTAZIONE MENSILE se limportazione e' effettuata");
@@ -84,16 +86,12 @@ public partial class FlussiFinContext : DbContext
             entity.Property(e => e.ID_IMPORTAZIONE_FLUSSO)
                 .ValueGeneratedOnAdd()
                 .HasComment("Index");
-            entity.Property(e => e.ID_MONITORAGGIO_GESTORE).HasComment("ID MONITORAGGIO COLLEGATO AD AN MONITORAGGIO GESTORI");
             entity.Property(e => e.NOTE_HTML).HasComment("NOTE Sull importazione");
 
             entity.HasOne(d => d.ID_GESTORENavigation).WithMany()
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("AN_GESTORI");
 
-            entity.HasOne(d => d.ID_MONITORAGGIO_GESTORENavigation).WithMany()
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("MONITORAGGIO_GESTORI");
         });
 
         modelBuilder.Entity<MOVIMENTI_NORMALIZZATI>(entity =>

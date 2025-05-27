@@ -11,15 +11,9 @@ public class UtilsService
         _context = context;
     }
 
-    public async Task<DateTime?> GetLastImportMMByIdMonitoraggio(decimal idMonitoraggioGestore)
+    public async Task<string> GetGestoreDs(decimal idGestore)
     {
-        var idGestore = await _context.AN_MONITORAGGIO_GESTORIs
-            .Where(w => w.ID_MONITORAGGIO_GESTORE == idMonitoraggioGestore)
-            .Select(s => s.ID_GESTORE)
-            .FirstOrDefaultAsync();
-        
-        return await _context.SALDI_NORMALIZZATIs
-            .Where(s => s.ID_GESTORE == idGestore)
-            .MaxAsync(s => (DateTime?)s.DATA_SALDO);
+        var dsGestore =await _context.AN_GESTORIs.Where(w=>w.ID_GESTORE==idGestore).Select(s => s.DS_GESTORE).FirstOrDefaultAsync();
+        return String.IsNullOrEmpty(dsGestore) ? "" : dsGestore;
     }
 }

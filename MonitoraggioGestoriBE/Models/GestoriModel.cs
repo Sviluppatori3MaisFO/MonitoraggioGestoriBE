@@ -41,7 +41,6 @@ public class GestoreMonitoratoModel
     
     public GestoreMonitoratoModel(AN_MONITORAGGIO_GESTORI g)
     {
-        IdMonitoraggioGestore = g.ID_MONITORAGGIO_GESTORE;
         IdGestore = g.ID_GESTORE;
         CompravenditaDivisa = g.COMPRAVENDITA_DIVISA;
         NoteGestore = g.NOTE_GESTORE;
@@ -59,7 +58,6 @@ public class GestoreMonitoratoModel
     
     public GestoreMonitoratoModel(AN_MONITORAGGIO_GESTORI g, DateTime? lastImportMM = null)
     {
-        IdMonitoraggioGestore = g.ID_MONITORAGGIO_GESTORE;
         IdGestore = g.ID_GESTORE;
         CompravenditaDivisa = g.COMPRAVENDITA_DIVISA;
         NoteGestore = g.NOTE_GESTORE;
@@ -79,7 +77,6 @@ public class GestoreMonitoratoModel
 
     public GestoreMonitoratoModel(AN_MONITORAGGIO_GESTORI g, DateTime? DtImportMMP, DateTime? lastImportMM = null, DateTime? DtImportSSP = null, List<MovimentiNormalizzatiModel> MovimentiBloccati = null)
     {
-        IdMonitoraggioGestore = g.ID_MONITORAGGIO_GESTORE;
         IdGestore = g.ID_GESTORE;
         CompravenditaDivisa = g.COMPRAVENDITA_DIVISA;
         NoteGestore = g.NOTE_GESTORE;
@@ -112,10 +109,12 @@ public class GestoreImportazioneMovimentiChart
 
 public class GestoreUltimoImportazione
 {
+    public decimal IdGestore { get; set; }
     public decimal IdImportazioneGestore { get; set; }
     public string DsGestore { get; set; }
     public decimal FgImportSS { get; set; }
     public decimal FgImportMM { get; set; }
-    public string Note { get; set; }
+    public string? Note { get; set; }
     public DateTime DtImportMM { get; set; }    
+    public DateTime? DtImportSS { get; set; }    
 }

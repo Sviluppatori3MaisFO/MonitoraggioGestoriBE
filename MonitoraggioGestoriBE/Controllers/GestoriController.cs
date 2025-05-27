@@ -47,10 +47,10 @@ public class GestoriController : ControllerBase
         
         // recuper gli import manuali
         var importgestori = await _context.MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSIs
-            .Where(w => gestoriMonitoratiIds.Contains(w.ID_MONITORAGGIO_GESTORE))
+            .Where(w => gestoriIds.Contains(w.ID_GESTORE))
             .Select(s => new
             {
-                IdGestoreMonitorato = s.ID_MONITORAGGIO_GESTORE,
+                IdGestoreMonitorato = s.ID_GESTORE,
                 DtImports = new
                 {
                     DtImportazioneMM = s.DT_IMPORT_MM,
@@ -101,7 +101,7 @@ public class GestoriController : ControllerBase
 
         // 3. Recupera i dati di importazione (da IMPORTAZIONE_GESTORI)
         var import = await _context.MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSIs
-            .Where(i => i.ID_MONITORAGGIO_GESTORE == monitoraggio.ID_MONITORAGGIO_GESTORE)
+            .Where(i => i.ID_GESTORE == monitoraggio.ID_GESTORE)
             .OrderByDescending(i => i.DT_IMPORT_MM)
             .FirstOrDefaultAsync();
 
@@ -159,7 +159,11 @@ public class GestoriController : ControllerBase
             .Select(s => new MovimentiNormalizzatiModel()
             {
                 IdMovimentoNormalizzato = s.ID_MOV_NORMALIZZATO,
-                Stato = String.IsNullOrEmpty(s.STATO) ? "" : s.STATO
+                Stato = String.IsNullOrEmpty(s.STATO) ? "" : s.STATO,
+                DtOperazione = s.DATA_OPERAZIONE,
+                Causale = String.IsNullOrEmpty(s.CAUSALE) ? "" : s.CAUSALE,
+                TipoOperazione = String.IsNullOrEmpty(s.TIPO_OPERAZIONE)? "" : s.TIPO_OPERAZIONE,
+                
             } )
             
             .ToListAsync();
@@ -167,25 +171,7 @@ public class GestoriController : ControllerBase
         return res;
     }
     
-    // - =================================================================================================================================================
     
-    [HttpGet("getUltimaImportazione")]
-    public async Task <GestoreUltimoImportazione> GetUltimaImportazione(decimal idGestore)
-    {
-        var res = await _context.MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSIs
-            .Where(w => w.ID_MONITORAGGIO_GESTORENavigation.ID_GESTORE == idGestore)
-            .Select(s => new GestoreUltimoImportazione()
-            {
-                IdImportazioneGestore = s.ID_IMPORTAZIONE_FLUSSO,
-                DsGestore = s.ID_GESTORENavigation.DS_GESTORE,
-                FgImportMM = s.FG_IMPORTAZIONE_MM,
-                FgImportSS = s.FG_IMPORTAZIONE_SS != null ?s.FG_IMPORTAZIONE_SS.Value:0,
-                Note = s.NOTE_HTML,
-                DtImportMM = s.DT_IMPORT_MM
-            }).FirstOrDefaultAsync();
-
-        return res;
-    }
     
     // - =================================================================================================================================================
     
@@ -212,8 +198,63 @@ public class GestoriController : ControllerBase
         
         return true;
     }
+    
+    
+    
+    
 
     #endregion    
+    
+    #region Importazioni
+    // - =================================================================================================================================================
+    
+    [HttpGet("getUltimaImportazione/{idGestore}")]
+    public async Task <GestoreUltimoImportazione> GetUltimaImportazione(decimal idGestore)
+    {
+        var res = await _context.MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSIs
+            .Where(w => w.ID_GESTORENavigation.ID_GESTORE == idGestore)
+            .Select(s => new GestoreUltimoImportazione()
+            {
+                IdImportazioneGestore = s.ID_IMPORTAZIONE_FLUSSO,
+                DsGestore = s.ID_GESTORENavigation.DS_GESTORE,
+                FgImportMM = s.FG_IMPORTAZIONE_MM,
+                FgImportSS = s.FG_IMPORTAZIONE_SS != null ?s.FG_IMPORTAZIONE_SS.Value:0,
+                Note = String.IsNullOrEmpty(s.NOTE_HTML)? "" : s.NOTE_HTML,
+                DtImportMM = s.DT_IMPORT_MM,
+                DtImportSS = s.DT_IMPORT_SS,
+            }).FirstOrDefaultAsync();
+        
+        if(res == null)
+        {
+            res = new GestoreUltimoImportazione();
+            res.DsGestore = await _utils.GetGestoreDs(idGestore);
+        }
+
+        return res;
+    }
+    
+    
+    // - =================================================================================================================================================
+    
+    // POST: /editMonitoraggioGestore
+    [HttpPost("addNewImportazione")]
+    public async Task<bool> AddNewImportazione(GestoreUltimoImportazione model)
+    {
+        MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSI addNew = new MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSI();
+
+        addNew.FG_IMPORTAZIONE_MM = model.FgImportMM;
+        addNew.FG_IMPORTAZIONE_SS = model.FgImportSS;
+        addNew.DT_IMPORT_MM = model.DtImportMM;
+        addNew.DT_IMPORT_SS = model.DtImportSS;
+        addNew.NOTE_HTML = model.Note;
+        addNew.ID_GESTORE = model.IdGestore;
+        
+        await _context.AddAsync(addNew);
+        await _context.SaveChangesAsync();
+        
+        return true;
+    }
+    #endregion
 }
 
 

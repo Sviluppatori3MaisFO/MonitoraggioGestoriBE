@@ -23,12 +23,6 @@ public partial class MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSI
     public decimal ID_GESTORE { get; set; }
 
     /// <summary>
-    /// ID MONITORAGGIO COLLEGATO AD AN MONITORAGGIO GESTORI
-    /// </summary>
-    [Column(TypeName = "NUMBER")]
-    public decimal ID_MONITORAGGIO_GESTORE { get; set; }
-
-    /// <summary>
     /// FG IMPORTAZIONE MENSILE se limportazione e&apos; effettuata
     /// </summary>
     [Column(TypeName = "NUMBER")]
@@ -61,6 +55,4 @@ public partial class MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSI
     [ForeignKey("ID_GESTORE")]
     public virtual AN_GESTORI ID_GESTORENavigation { get; set; } = null!;
 
-    [ForeignKey("ID_MONITORAGGIO_GESTORE")]
-    public virtual AN_MONITORAGGIO_GESTORI ID_MONITORAGGIO_GESTORENavigation { get; set; } = null!;
 }
