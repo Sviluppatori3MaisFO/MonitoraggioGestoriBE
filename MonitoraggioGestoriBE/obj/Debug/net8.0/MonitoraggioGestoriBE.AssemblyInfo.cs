@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MonitoraggioGestoriBE")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0a4ecd5a75953e7c541b31ef297be35834d26274")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b044fd5a241e35ed02821d8db101e9e6cda97188")]
 [assembly: System.Reflection.AssemblyProductAttribute("MonitoraggioGestoriBE")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MonitoraggioGestoriBE")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

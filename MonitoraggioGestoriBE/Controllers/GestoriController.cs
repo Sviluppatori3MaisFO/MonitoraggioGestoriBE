@@ -226,7 +226,9 @@ public class GestoriController : ControllerBase
                 Note = String.IsNullOrEmpty(s.NOTE_HTML)? "" : s.NOTE_HTML,
                 DtImportMM = s.DT_IMPORT_MM,
                 DtImportSS = s.DT_IMPORT_SS,
-            }).FirstOrDefaultAsync();
+            })
+            .OrderByDescending(w => w.IdImportazioneGestore)
+            .FirstOrDefaultAsync();
         
         if(res == null)
         {
