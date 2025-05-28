@@ -171,3 +171,4 @@
 /Users/michaelcoltra/Work/Mais/Projects/MonitoraggioGestori/MonitoraggioGestoriBE/MonitoraggioGestoriBE/bin/Debug/net8.0/Castle.Core.dll
 /Users/michaelcoltra/Work/Mais/Projects/MonitoraggioGestori/MonitoraggioGestoriBE/MonitoraggioGestoriBE/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Proxies.dll
 /Users/michaelcoltra/Work/Mais/Projects/MonitoraggioGestori/MonitoraggioGestoriBE/MonitoraggioGestoriBE/obj/Debug/net8.0/MonitoraggioGestoriBE.sourcelink.json
+/Users/michaelcoltra/Work/Mais/Projects/MonitoraggioGestori/MonitoraggioGestoriBE/MonitoraggioGestoriBE/bin/Debug/net8.0/web.config
