@@ -46,25 +46,29 @@ public class GestoriController : ControllerBase
             .ToDictionaryAsync(x => x.IdGestore, x => x.MaxDate);
         
         // recuper gli import manuali
-        var importgestori = await _context.MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSIs
+        var latestImports = await _context.MONITORAGGIO_GESTORI_IMPORTAZIONE_FLUSSIs
             .Where(w => gestoriIds.Contains(w.ID_GESTORE))
-            .Select(s => new
-            {
-                IdGestoreMonitorato = s.ID_GESTORE,
-                DtImports = new
+            .GroupBy(g => g.ID_GESTORE)
+            .Select(g => g.OrderByDescending(x => x.ID_IMPORTAZIONE_FLUSSO).FirstOrDefault())
+            .ToListAsync(); // esegui qui la query
+
+        var importgestori = latestImports
+            .ToDictionary(
+                s => s.ID_GESTORE,
+                s => new
                 {
                     DtImportazioneMM = s.DT_IMPORT_MM,
-                    DtImportazioneSS = s.DT_IMPORT_SS,
-                }
-            })
-            .ToDictionaryAsync(d => d.IdGestoreMonitorato, d => d.DtImports);
+                    DtImportazioneSS = s.DT_IMPORT_SS
+                });
+
+
 
         // 3. Costruisci il modello combinando i dati
         var result = gestoriMonitorati
             .Select(g =>
             {
                 // Estrai dati da dizionari con nomi distinti
-                importgestori.TryGetValue(g.ID_MONITORAGGIO_GESTORE, out var importData);
+                importgestori.TryGetValue(g.ID_GESTORE, out var importData);
                 lastImportByGestoreId.TryGetValue(g.ID_GESTORE, out var lastMM);
 
                 return new GestoreMonitoratoModel(
